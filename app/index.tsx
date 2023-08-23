@@ -4,6 +4,7 @@ import { useState } from 'react'
 import app from '../config/firebase'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Link, useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 
 const Home = () => {
   const [email, setEMail] = useState<string>('')
@@ -27,6 +28,7 @@ const Home = () => {
 
   return (
     <SafeAreaView>
+      <StatusBar style='dark' />
       <Text style={styles.title}>Welcome to my app</Text>
       <TextInput
         style={styles.input}

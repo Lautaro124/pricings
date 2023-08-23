@@ -3,13 +3,15 @@ import { TextInput } from 'react-native-gesture-handler'
 import { useState } from 'react'
 import app from '../config/firebase'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 
 const Home = () => {
   const [email, setEMail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const auth = getAuth(app)
+  const router = useRouter()
 
   const handleSubmit = () => {
     if (email.length === 0 && password.length === 0) return null
@@ -19,12 +21,16 @@ const Home = () => {
     if (password !== confirmPassword) return null
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then(value => { console.log('user created successfully: ', value.user.displayName) })
+      .then(value => {
+        console.log('user created successfully: ', value.user.displayName)
+        router.replace('/map')
+      })
       .catch(error => { console.error(error) })
   }
 
   return (
     <SafeAreaView>
+      <StatusBar style='dark' />
       <Text style={styles.title}>Ingresa en mi aplicacion</Text>
       <TextInput
         style={styles.input}
