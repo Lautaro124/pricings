@@ -3,12 +3,13 @@ import { Button, Text, StyleSheet } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { useState } from 'react'
 import app from '../config/firebase'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { Link } from 'expo-router'
 
 const Home = () => {
   const [email, setEMail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
   const auth = getAuth(app)
 
   const handleSubmit = () => {
@@ -16,15 +17,16 @@ const Home = () => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!regex.test(email)) return null
     if (password.length < 6) return null
+    if (password !== confirmPassword) return null
 
-    void signInWithEmailAndPassword(auth, email, password)
-      .then(value => { console.log(value.providerId) })
-      .catch(err => { console.log(err) })
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(value => { console.log('user created successfully: ', value.user.displayName) })
+      .catch(error => { console.error(error) })
   }
 
   return (
     <SafeAreaView>
-      <Text style={styles.title}>Welcome to my app</Text>
+      <Text style={styles.title}>Ingresa en mi aplicacion</Text>
       <TextInput
         style={styles.input}
         placeholder='Email'
@@ -35,12 +37,17 @@ const Home = () => {
         placeholder='Password'
         onChangeText={setPassword}
       />
+      <TextInput
+        style={styles.input}
+        placeholder='Password confirmation'
+        onChangeText={setConfirmPassword}
+      />
       <Button
         title='Home'
         onPress={handleSubmit}
       />
-      <Link href='/signup' style={styles.link}>
-        Create account
+      <Link href='/' style={styles.link}>
+        Go login
       </Link>
     </SafeAreaView>
   )
