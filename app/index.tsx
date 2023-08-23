@@ -1,15 +1,15 @@
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, Text, StyleSheet } from 'react-native'
+import { Button, Text, StyleSheet, SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { useState } from 'react'
 import app from '../config/firebase'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 
 const Home = () => {
   const [email, setEMail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const auth = getAuth(app)
+  const router = useRouter()
 
   const handleSubmit = () => {
     if (email.length === 0 && password.length === 0) return null
@@ -18,7 +18,10 @@ const Home = () => {
     if (password.length < 6) return null
 
     void signInWithEmailAndPassword(auth, email, password)
-      .then(value => { console.log(value.providerId) })
+      .then(value => {
+        console.log(value.providerId)
+        router.push('/map')
+      })
       .catch(err => { console.log(err) })
   }
 
@@ -65,7 +68,8 @@ const styles = StyleSheet.create({
   },
   link: {
     padding: 10,
-    color: 'blue'
+    color: 'blue',
+    textDecorationLine: 'underline'
   }
 })
 

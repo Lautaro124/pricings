@@ -1,5 +1,4 @@
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, Text, StyleSheet } from 'react-native'
+import { Button, Text, StyleSheet, SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { useState } from 'react'
 import app from '../config/firebase'
@@ -72,7 +71,8 @@ const styles = StyleSheet.create({
   },
   link: {
     padding: 10,
-    color: 'blue'
+    color: 'blue',
+    textDecorationLine: 'underline'
   }
 })
 
