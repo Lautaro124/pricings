@@ -1,16 +1,29 @@
 import { Button, Text, StyleSheet, SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import app from '../config/firebase'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as Location from 'expo-location'
 
 const Home = () => {
   const [email, setEMail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const auth = getAuth(app)
   const router = useRouter()
+
+  const getPermissions = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== 'granted') {
+      alert('Permission to access location was denied, please try again')
+      void getPermissions()
+    }
+  }
+
+  useEffect(() => {
+    void getPermissions()
+  }, [])
 
   const handleSubmit = () => {
     if (email.length === 0 && password.length === 0) return null
